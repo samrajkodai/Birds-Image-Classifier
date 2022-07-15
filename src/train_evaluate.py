@@ -11,7 +11,8 @@ from glob import glob
 import matplotlib.pyplot as plt
 import argparse
 from get_data import read_params,get_data
-
+import mlflow
+import os
 
 def evaluate(config_path):
 
@@ -27,58 +28,67 @@ def evaluate(config_path):
     metrics = config['dl_params']['metrics']
     epochs = config['dl_params']['epochs']
     batch_size = config['dl_params']['batch_size']
+    model_dir=config['model_dir']
 
-    # add preprocessing layer to the front of VGG
-    vgg = VGG16(input_shape=IMAGE_SIZE + [3], weights='imagenet', include_top=False)
+    mlflow_config = config['mlflow_config']
+    remote_server_uri = mlflow_config["remote_server_uri"]
 
-    for layer in vgg.layers:
-        layer.trainable=False
-        
-    folders=glob(f"{train_path}/*")
+    mlflow.set_tracking_uri(remote_server_uri)
+    mlflow.set_experiment(mlflow_config['experiment_name'])
 
-    print("folders",folders)
+    with mlflow.start_run(run_name=mlflow_config['run_name']) as mlops_run:
 
-    x=Flatten()(vgg.output)
+        # add preprocessing layer to the front of VGG
+        vgg = VGG16(input_shape=IMAGE_SIZE + [3], weights='imagenet', include_top=False)
 
-    predictions=Dense(len(folders),activation=activation)(x)
+        for layer in vgg.layers:
+            layer.trainable=False
+            
+        folders=glob(f"{train_path}/*")
 
-    model = Model(inputs=vgg.input, outputs=predictions)
+        print("folders",folders)
 
-    model.summary()
+        x=Flatten()(vgg.output)
 
-    model.compile(optimizer=optimizer,loss=loss,metrics=metrics)
+        predictions=Dense(len(folders),activation=activation)(x)
 
+        model = Model(inputs=vgg.input, outputs=predictions)
 
+        model.summary()
 
-    train_datagen=ImageDataGenerator(rescale = 1./255,
-                                    shear_range = 0.2,
-                                    zoom_range = 0.2,
-                                    horizontal_flip = True)
-
-    test_datagen = ImageDataGenerator(rescale = 1./255)
-
-
-    training_set=train_datagen.flow_from_directory(directory=train_path,
-                                                target_size=(224,224),
-                                                batch_size=32,
-                                                class_mode='categorical'
-                                                )
-
-    test_set=test_datagen.flow_from_directory(directory=test_path,
-                                            target_size = (224, 224),
-                                            batch_size = 32,
-                                            class_mode = 'categorical')
+        model.compile(optimizer=optimizer,loss=loss,metrics=metrics)
 
 
-    r = model.fit_generator(
-    training_set,
-    validation_data=test_set,
-    epochs=epochs,
-    steps_per_epoch=len(training_set),
-    validation_steps=len(test_set)
-    )
+
+        train_datagen=ImageDataGenerator(rescale = 1./255,
+                                        shear_range = 0.2,
+                                        zoom_range = 0.2,
+                                        horizontal_flip = True)
+
+        test_datagen = ImageDataGenerator(rescale = 1./255)
 
 
+        training_set=train_datagen.flow_from_directory(directory=train_path,
+                                                    target_size=(224,224),
+                                                    batch_size=32,
+                                                    class_mode='categorical'
+                                                    )
+
+        test_set=test_datagen.flow_from_directory(directory=test_path,
+                                                target_size = (224, 224),
+                                                batch_size = 32,
+                                                class_mode = 'categorical')
+
+
+        model = model.fit_generator(
+        training_set,
+        validation_data=test_set,
+        epochs=epochs,
+        steps_per_epoch=len(training_set),
+        validation_steps=len(test_set)
+        )
+
+        model.save(os.path.join(model_dir,"birds_classifier.h5"))
 
 
 if __name__=="__main__":
