@@ -76,7 +76,6 @@ To deploy this project run
 ## AI Tools and Framework
 * Machine Learning
 * Deep Learning
-* LSTM
 * VGG16
 * Flask
 * Mlops
@@ -84,7 +83,6 @@ To deploy this project run
 * Git
 * Vscode
 
-classifier
 
 Project Organization
 ------------
