@@ -1,0 +1,13 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/get_data.py --config=config/params.yaml
+    deps:
+    - path: data_given/test
+      md5: 3a822ab46225d7d75f16481604320494.dir
+      size: 2175447
+      nfiles: 100
+    - path: data_given/train
+      md5: 90f8be788f67666ca8557210600b5a66.dir
+      size: 63535941
+      nfiles: 3044
