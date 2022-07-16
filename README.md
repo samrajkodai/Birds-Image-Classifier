@@ -77,7 +77,7 @@ To deploy this project run
 * Machine Learning
 * Deep Learning
 * LSTM
-* Natural Language Processing
+* VGG16
 * Flask
 * Mlops
 * Dvc
