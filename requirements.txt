@@ -8,4 +8,4 @@ gunicorn
 PyYAML
 tensorflow-cpu
 mlflow
-pickle5==0.0.1
+Pillow
