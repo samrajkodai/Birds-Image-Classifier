@@ -15,7 +15,7 @@ https://www.kaggle.com/search?q=spam+email+in%3Adatasets](https://www.kaggle.com
 
 ## <a href="url"><img src="https://user-images.githubusercontent.com/61903698/178229350-7f29d4eb-e758-455d-ab8e-87ef337e1880.png" align="left" height="48" width="48" ></a> Installation
 
-### Libraries
+```bash
 * dvc
 * dvc[gdrive]
 * sklearn
@@ -29,6 +29,7 @@ https://www.kaggle.com/search?q=spam+email+in%3Adatasets](https://www.kaggle.com
 * tensorflow-cpu
 * nltk
 * mlflow
+```
 
 to install above libraries please run the command
 
@@ -134,6 +135,4 @@ Project Organization
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
 
---------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
