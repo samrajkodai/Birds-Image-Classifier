@@ -3,7 +3,6 @@
 
 # third party packages
 dvc
-dvc[gdrive]
 sklearn
 pandas
 pytest
@@ -13,5 +12,4 @@ flask
 gunicorn
 PyYAML
 tensorflow-cpu
-nltk
 mlflow
