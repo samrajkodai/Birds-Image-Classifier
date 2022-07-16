@@ -2,12 +2,10 @@
 -e .
 
 # third party packages
-dvc
 sklearn
-pandas
-flake8
 flask
 gunicorn
 PyYAML
 tensorflow-cpu
 mlflow
+pickle5==0.0.1
